@@ -44,7 +44,7 @@ public class Logger {
 	 * Generic logging function<br>
 	 * Prints a message of the following format to stderr: {@code [TIME LOGLEVEL] MESSAGE}<br>
 	 * <b>This function should not be called directly!</b>
-	 * @param msg the actual message to print.
+	 * @param msg actual message to print.
 	 * @param level the severity of the message, see {@link com.mrminecreep.jarock.Logger.LogLevels} for details.
 	 */
 	private static void log_log(String msg, LogLevels level) {
@@ -78,26 +78,50 @@ public class Logger {
 	
 	/**
 	 * Log function for logging debug output.<br>
-	 * See {@link com.mrminecreep.jarock.Logger.log_log} for details.
-	 * @param msg 
-	 * @param params
+	 * See {@link Logger#log_log} for details.
+	 * @param msg actual message to print 
+	 * @param params format strings i.e for %d,...
 	 */
 	public static void log_debug(String msg, Object... params) {
 		log_log(String.format(msg, params), LogLevels.DEBUG);
 	}
 	
+	/**
+	 * Log function for logging info output.<br>
+	 * See {@link Logger#log_log} for details.
+	 * @param msg actual message to print 
+	 * @param params format strings i.e for %d,...
+	 */
 	public static void log_info(String msg, Object... params) {
 		log_log(String.format(msg, params), LogLevels.INFO);
 	}
 	
+	/**
+	 * Log function for logging warning output.<br>
+	 * See {@link Logger#log_log} for details.
+	 * @param msg actual message to print 
+	 * @param params format strings i.e for %d,...
+	 */
 	public static void log_warn(String msg, Object... params) {
 		log_log(String.format(msg, params), LogLevels.WARN);
 	}
 	
+	/**
+	 * Log function for logging error output (Severe but not fatal incident).<br>
+	 * See {@link Logger#log_log} for details.
+	 * @param msg actual message to print 
+	 * @param params format strings i.e for %d,...
+	 */
 	public static void log_error(String msg, Object... params) {
 		log_log(String.format(msg, params), LogLevels.ERROR);
 	}
 	
+	/**
+	 * Log function for logging fatal output (Only if server exits).<br>
+	 * See {@link Logger#log_log} for details.
+	 * @param msg actual message to print 
+	 * @param params format strings i.e for %d,...
+	 */
 	public static void log_fatal(String msg, Object... params) {
 		log_log(String.format(msg, params), LogLevels.FATAL);
 	}
