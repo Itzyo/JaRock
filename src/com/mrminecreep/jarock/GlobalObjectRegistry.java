@@ -1,7 +1,7 @@
 package com.mrminecreep.jarock;
 
 import java.util.HashMap;
-
+//1234
 public class GlobalObjectRegistry {
 	
 	private static HashMap<Integer, Object> objs = new HashMap<Integer, Object>();
