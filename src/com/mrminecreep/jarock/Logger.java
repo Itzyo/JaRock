@@ -14,7 +14,7 @@ import java.util.Date;
 public class Logger {
 	
 	/**
-	 * This enumeration provides the definition of the log levels<br><br>
+	 * This enumeration provides the definition of the log levels.<br><br>
 	 * 
 	 * Possible values:<br>
 	 * <ul>
@@ -36,16 +36,16 @@ public class Logger {
 	}
 	
 	/**
-	 * Current log level
+	 * Current log level.
 	 */
 	private static LogLevels LogLevel = LogLevels.DEBUG;
 	
 	/**
 	 * Generic logging function<br>
 	 * Prints a message of the following format to stderr: {@code [TIME LOGLEVEL] MESSAGE}<br>
-	 * <b>This function should not be called directly</b>
-	 * @param msg the actual message to print
-	 * @param level the severity of the message, see {@link com.mrminecreep.jarock.Logger.LogLevels} for details
+	 * <b>This function should not be called directly!</b>
+	 * @param msg the actual message to print.
+	 * @param level the severity of the message, see {@link com.mrminecreep.jarock.Logger.LogLevels} for details.
 	 */
 	private static void log_log(String msg, LogLevels level) {
 		
@@ -61,16 +61,16 @@ public class Logger {
 	}
 	
 	/**
-	 * Sets the global log level
-	 * @param level the severity of the level, see {@link com.mrminecreep.jarock.Logger.LogLevels} for details
+	 * Sets the global log level.
+	 * @param level the severity of the level, see {@link com.mrminecreep.jarock.Logger.LogLevels} for details.
 	 */
 	public static void set_log_level(LogLevels level) {
 		LogLevel = level;
 	}
 	
 	/**
-	 * Gets the global log level
-	 * @return the current log level, see {@link com.mrminecreep.jarock.Logger.LogLevels} for details
+	 * Gets the global log level.
+	 * @return the current log level, see {@link com.mrminecreep.jarock.Logger.LogLevels} for details.
 	 */
 	public static LogLevels get_log_level() {
 		return LogLevel;
