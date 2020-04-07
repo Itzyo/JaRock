@@ -1,4 +1,4 @@
-package com.networking;
+package com.mrminecreep.jarock.networking;
 import io.netty.buffer.ByteBuf;
 
 import io.netty.channel.ChannelHandlerContext;
