@@ -56,7 +56,7 @@ public class Logger {
 			Date date = new Date();
 			
 			//Print msg
-			System.err.println(String.format("[%s %s] %s", dateF.format(date), LogLevel, msg));
+			System.err.println(String.format("[%s %s] %s", dateF.format(date), level, msg));
 		}
 	}
 	
