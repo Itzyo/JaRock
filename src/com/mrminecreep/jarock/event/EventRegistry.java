@@ -62,9 +62,13 @@ public class EventRegistry {
 	 * @param e Event object to pass on.
 	 */
 	public static void pushEvent(EventConstructor.EventConstructorSec sec2, Event e) {
+		//Require key
 		Objects.requireNonNull(sec2);
+		
+		//Check if event has been registered.
 		if(Events.contains(e.getClass())) {
 			try {
+				//Pass event to the EventHandler
 				EventHandler.HandleEventPush(sec, e);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
 				e1.printStackTrace();
