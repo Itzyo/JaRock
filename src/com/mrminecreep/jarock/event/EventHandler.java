@@ -48,9 +48,9 @@ public class EventHandler {
 	 * 
 	 * @param sec "Key" from {@link com.mrminecreep.jarock.event.EventRegistry}.
 	 * @param e Event to pass to the listeners.
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException Auto-generated
+	 * @throws IllegalArgumentException Auto-generated
+	 * @throws InvocationTargetException Auto-generated
 	 */
 	public static void HandleEventPush(EventRegistry.EventRegistrySec sec, Event e) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		//Require key
