@@ -8,9 +8,9 @@ import com.mrminecreep.jarock.event.events.Event;
 
 /**
  * Registry for events implementing {@link com.mrminecreep.jarock.event.events.Event}. <br>
- * To register an event call {@link EventRegistry#registerEvent(Event)}, <br>
+ * To register an event call {@link com.mrminecreep.jarock.event.EventRegistry#registerEvent(Class)}, <br>
  * after that event listeners (as described in {@link com.mrminecreep.jarock.event.EventHandler}) can be added. <br>
- * To unregister an event call {@link EventRegistry#unregisterEvent(Event)}, <br>
+ * To unregister an event call {@link com.mrminecreep.jarock.event.EventRegistry#unregisterEvent(Class)}, <br>
  * after that the specified event fired by {@link com.mrminecreep.jarock.event.EventConstructor} will not be working.
  * 
  * @author MrMinecreep
@@ -33,7 +33,7 @@ public class EventRegistry {
 	
 	/** 
 	 * Storage for registered events.<br>
-	 * This field is altered by {@link EventRegistry#registerEvent(Event)} and {@link EventRegistry#unregisterEvent(Event)}.
+	 * This field is altered by {@link com.mrminecreep.jarock.event.EventRegistry#registerEvent(Class)} and {@link com.mrminecreep.jarock.event.EventRegistry#unregisterEvent(Class)}.
 	 */
 	private static ArrayList<Class<?>> Events = new ArrayList<Class<?>>();
 	
@@ -58,7 +58,7 @@ public class EventRegistry {
 	/**
 	 * Pass event to the {@link com.mrminecreep.jarock.event.EventHandler} and checks if Event was registered.
 	 * 
-	 * @param sec "Key" from {@link com.mrminecreep.jarock.event.EventConstructor}.
+	 * @param sec2 "Key" from {@link com.mrminecreep.jarock.event.EventConstructor}.
 	 * @param e Event object to pass on.
 	 */
 	public static void pushEvent(EventConstructor.EventConstructorSec sec2, Event e) {
