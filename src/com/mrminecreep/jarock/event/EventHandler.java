@@ -7,6 +7,11 @@ import java.util.Objects;
 
 import com.mrminecreep.jarock.event.events.Event;
 
+/**
+ * 
+ * @author MrMinecreep
+ *
+ */
 public class EventHandler {
 	
 	private static ArrayList<Object> handlers = new ArrayList<Object>();
