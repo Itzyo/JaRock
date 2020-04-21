@@ -7,6 +7,8 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import org.json.JSONObject;
+
 import com.mrminecreep.jarock.Logger;
 import com.mrminecreep.jarock.event.EventConstructor;
 import com.mrminecreep.jarock.event.EventListener;
@@ -48,7 +50,9 @@ public class LoginHandler {
 					content.append(line);
 				in.close();
 				con.disconnect();
-				uuid = content.substring(7, content.indexOf(",") - 1);
+				
+				JSONObject obj = new JSONObject(content.toString());
+				uuid = obj.getString("id");
 				Logger.log_debug("%s uuid: %s, (%s)", e.getUsername(), uuid, content.toString());
 			}
 			

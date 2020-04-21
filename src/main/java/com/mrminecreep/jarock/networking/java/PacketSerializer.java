@@ -3,6 +3,7 @@ package com.mrminecreep.jarock.networking.java;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -45,10 +46,10 @@ public class PacketSerializer extends MessageToMessageEncoder<ArrayList<Object>>
 		index++;
 		ByteBuf buf = Unpooled.buffer();
 				
-		File xml = new File(getClass().getResource("/JavaPackets.xml").getFile());
+		InputStream is = this.getClass().getResourceAsStream("/JavaPackets.xml");
 		DocumentBuilderFactory dbFac = DocumentBuilderFactory.newInstance();
 		DocumentBuilder Builder = dbFac.newDocumentBuilder();
-		Document doc = Builder.parse(xml);
+		Document doc = Builder.parse(is);
 		doc.getDocumentElement().normalize();
 		
 		NodeList packets = doc.getElementsByTagName("packet");
@@ -172,7 +173,7 @@ public class PacketSerializer extends MessageToMessageEncoder<ArrayList<Object>>
 				}
 			}
 		}
-				
+		is.close();		
 	}
 		
 }

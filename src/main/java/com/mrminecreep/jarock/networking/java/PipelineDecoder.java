@@ -1,6 +1,7 @@
 package com.mrminecreep.jarock.networking.java;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,10 +31,10 @@ public class PipelineDecoder extends MessageToMessageDecoder<ByteBuf>{
 		Logger.log_debug("Packet id is %d while client state is %d.", pId, ClientRegistry.getState(ctx.channel().remoteAddress().toString()));
 		parsedPacket.put("Id", pId);
 		
-		File xml = new File(getClass().getResource("/JavaPackets.xml").getFile());
+		InputStream is = this.getClass().getResourceAsStream("/JavaPackets.xml");
 		DocumentBuilderFactory dbFac = DocumentBuilderFactory.newInstance();
 		DocumentBuilder Builder = dbFac.newDocumentBuilder();
-		Document doc = Builder.parse(xml);
+		Document doc = Builder.parse(is);
 		doc.getDocumentElement().normalize();
 		
 		NodeList packets = doc.getElementsByTagName("packet");
@@ -112,6 +113,7 @@ public class PipelineDecoder extends MessageToMessageDecoder<ByteBuf>{
 			}
 		}
 		out.add(parsedPacket);
+		is.close();
 	}
 
 }
