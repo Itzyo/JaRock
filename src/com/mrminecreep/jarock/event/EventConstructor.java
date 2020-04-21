@@ -1,6 +1,23 @@
 package com.mrminecreep.jarock.event;
 
+import com.mrminecreep.jarock.Logger;
 import com.mrminecreep.jarock.event.events.Event;
+import com.mrminecreep.jarock.event.events.HandshakeEvent;
+import com.mrminecreep.jarock.event.events.HeldItemChangeEvent;
+import com.mrminecreep.jarock.event.events.JoinGameEvent;
+import com.mrminecreep.jarock.event.events.KeepAliveEventRecv;
+import com.mrminecreep.jarock.event.events.KeepAliveEventSend;
+import com.mrminecreep.jarock.event.events.LoginStartEvent;
+import com.mrminecreep.jarock.event.events.LoginSuccessEvent;
+import com.mrminecreep.jarock.event.events.PlayerInfoAddPlayerEvent;
+import com.mrminecreep.jarock.event.events.PlayerInfoRemovePlayerEvent;
+import com.mrminecreep.jarock.event.events.PlayerInfoUpdateLatencyEvent;
+import com.mrminecreep.jarock.event.events.PlayerPositionAndLookEvent;
+import com.mrminecreep.jarock.event.events.PlayerPositionUpdateEvent;
+import com.mrminecreep.jarock.event.events.PlayerRotationUpdateEvent;
+import com.mrminecreep.jarock.event.events.SpawnPositionEvent;
+import com.mrminecreep.jarock.minecraft.Player;
+import com.mrminecreep.jarock.networking.java.Types.Position;
 
 /**
  * Constructor class that provides functions for creating events with parameters. <br>
@@ -29,14 +46,84 @@ public class EventConstructor {
 	 */
 	public static final EventConstructorSec sec = new EventConstructorSec();
 	
+	public static void createHandshakeEvent(Object ProtocolVersion, Object ServerAddress, Object ServerPort, Object NextState, String Client) {
+		HandshakeEvent e = new HandshakeEvent((Integer) ProtocolVersion, (String) ServerAddress, (Integer) ServerPort, (Integer) NextState, Client);
+		push(e);
+	}
+	
+	public static void createLoginStartEvent(Object Username, String Client, boolean isBedrock) {
+		LoginStartEvent e = new LoginStartEvent((String) Username, Client, isBedrock);
+		push(e);
+	}
+	
+	public static void createLoginSuccessEvent(Object Player) {
+		LoginSuccessEvent e = new LoginSuccessEvent((Player) Player);
+		push(e);
+	}
+	
+	 public static void createJoinGameEvent(Object EntityID, byte Gamemode, Object Dimension, Object LevelType, Object ViewDistance, boolean ReducedDebugInfo, Object Player) {
+		 JoinGameEvent e = new JoinGameEvent((Integer) EntityID, Gamemode, (Integer) Dimension, (String) LevelType, (Integer) ViewDistance, ReducedDebugInfo, (Player) Player);
+		 push(e);
+	 }
+	 
+	 public static void createHeldItemChangeEvent(Byte Slot, Player Player, Boolean send) {
+		 HeldItemChangeEvent e = new HeldItemChangeEvent(Slot, Player, send);
+		 push(e);
+	 }
+	 
+	 public static void createSpawnPositionEvent(Object pos, Player p) {
+		 SpawnPositionEvent e = new SpawnPositionEvent((Position) pos, p);
+		 push(e);
+	 }
+	 
+	 public static void createPlayerPositionAndLookEvent(Object X, Object Y, Object Z, Object Yaw, Object Pitch, byte Flags, Object TeleportID, Player p, Boolean send) {
+		 PlayerPositionAndLookEvent e = new PlayerPositionAndLookEvent((Double) X, (Double) Y, (Double) Z, (Float) Yaw, (Float) Pitch, Flags, (Integer) TeleportID, p, send);
+		 push(e);
+	 }
+	 
+	 public static void createKeepAliveEventRecv(Object KeepAliveID, Player Player) {
+		 KeepAliveEventRecv e = new KeepAliveEventRecv((Long) KeepAliveID, Player);
+		 push(e);
+	 }
+	 
+	 public static void createKeepAliveEventSend(Object KeepAliveID) {
+		 KeepAliveEventSend e = new KeepAliveEventSend((Long) KeepAliveID);
+		 push(e);
+	 }
+	 
+	 public static void createPlayerPositionUpdateEvent(Object X, Object Feet_Y, Object Z, Object OnGround, Player p) {
+		 PlayerPositionUpdateEvent e = new PlayerPositionUpdateEvent((Double) X, (Double) Feet_Y, (Double) Z, (Boolean) OnGround, p);
+		 push(e);
+	 }
+	 
+	 public static void createPlayerRotationUpdateEvent(Object Yaw, Object Pitch, Object OnGround, Player p) {
+		 PlayerRotationUpdateEvent e = new PlayerRotationUpdateEvent((Float) Yaw, (Float) Pitch, (Boolean) OnGround, p);
+		 push(e);
+	 }
+	 
+	 public static void createPlayerInfoUpdateLatencyEvent(Player p) {
+		 PlayerInfoUpdateLatencyEvent e = new PlayerInfoUpdateLatencyEvent(p);
+		 push(e);
+	 }
+	 
+	 public static void createPlayerInfoAddPlayerEvent() {
+		 PlayerInfoAddPlayerEvent e = new PlayerInfoAddPlayerEvent();
+		 push(e);
+	 }
+	 
+	 public static void createPlayerInfoRemovePlayerEvent(Player p) {
+		 PlayerInfoRemovePlayerEvent e = new PlayerInfoRemovePlayerEvent(p);
+		 push(e);
+	 }
+	
 	/**
 	 * Private function that is invoked by every {@code createEvent(...)} function to send the event to all listening functions (see {@link com.mrminecreep.jarock.event.EventListener} for details).
 	 * 
 	 * @param e Event to fire.
 	 */
-	@SuppressWarnings("unused")
-	private static void push(Event e) {
-		EventRegistry.pushEvent(sec, e);
+	private static synchronized void push(Event e) {
+		Thread async = new Thread(() -> { EventRegistry.pushEvent(sec, e); });
+		async.start();
 	}
 	
 }

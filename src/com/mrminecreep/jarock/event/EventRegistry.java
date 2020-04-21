@@ -4,7 +4,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import com.mrminecreep.jarock.Logger;
 import com.mrminecreep.jarock.event.events.Event;
+import com.mrminecreep.jarock.minecraft.Player;
+import com.mrminecreep.jarock.minecraft.registry.PlayerRegistry;
+import com.mrminecreep.jarock.networking.ClientRegistry;
+
+import io.netty.channel.Channel;
 
 /**
  * Registry for events implementing {@link com.mrminecreep.jarock.event.events.Event}. <br>
@@ -68,9 +74,44 @@ public class EventRegistry {
 		//Check if event has been registered.
 		if(Events.contains(e.getClass())) {
 			try {
+				if(e.getPacketID() >= 0 && e.getState() >= 0 && e.send()) {
+
+					if(e.getPlayer() == null) {
+						for(Player p : PlayerRegistry.getPlayers()) {
+							Channel c = ClientRegistry.getChannel(p.getClient());
+							
+							while(!c.isWritable() && c.isActive()) {
+								Thread.currentThread();
+								Thread.sleep(50);
+								Logger.log_warn("Channel for client %s is not writable!", c.remoteAddress().toString());
+							}
+							
+							Logger.log_debug("Entering pipeline for packet with id %d (Sending to player %s)", e.getPacketID(), p.getUsername());
+							if(c.isWritable()) {
+								c.writeAndFlush(e.data()).sync();
+							}
+						}
+					} else {
+						Channel c = ClientRegistry.getChannel(e.getPlayer().getClient());
+						
+						while(!c.isWritable() && c.isActive()) {
+							Thread.currentThread();
+							Thread.sleep(50);
+							Logger.log_warn("Channel for client %s is not writable!", c.remoteAddress().toString());
+						}
+						
+						Logger.log_debug("Entering pipeline for packet with id %d", e.getPacketID());
+						if(c.isWritable()) {
+							c.writeAndFlush(e.data()).sync();
+						}
+					}
+				}
+				
 				//Pass event to the EventHandler
 				EventHandler.HandleEventPush(sec, e);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
+				
+				
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InterruptedException e1) {
 				e1.printStackTrace();
 			}
 		}
