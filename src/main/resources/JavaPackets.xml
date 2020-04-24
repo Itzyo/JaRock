@@ -4,8 +4,8 @@
 <!-- structure: -->
 <!-- 
 
-	<packet id="See https://wiki.vg/index.php?title=Protocol&oldid=15346" state="See https://wiki.vg/index.php?title=Protocol&oldid=15346" name="See https://wiki.vg/index.php?title=Protocol&oldid=15346">
-		<field type="See https://wiki.vg/index.php?title=Protocol&oldid=15346">Field name</field>
+	<packet id="See https://wiki.vg/index.php?title=Protocol&oldid=15346" state="See https://wiki.vg/index.php?title=Protocol&oldid=15346" name="See https://wiki.vg/index.php?title=Protocol&oldid=15346" type="Only present if a packet has multiple definitions, if its set then a byte with the specified type is pushed to the first element of the data array">
+		<field type="See https://wiki.vg/index.php?title=Protocol&oldid=15346" optional="if the field is optional then it optional is true. If set a boolean will be pushed BEFORE the actual field indicating if the field is present or not">Field name</field>
 	</packet>
  -->
  
