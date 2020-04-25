@@ -3,7 +3,7 @@ package com.mrminecreep.jarock.event.events;
 import java.util.ArrayList;
 
 import com.mrminecreep.jarock.minecraft.Player;
-import com.mrminecreep.jarock.networking.java.Types.Position;
+import com.mrminecreep.jarock.util.types.Position;
 
 public class SpawnPositionEvent implements Event {
 

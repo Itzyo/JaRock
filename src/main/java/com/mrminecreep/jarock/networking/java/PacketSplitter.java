@@ -1,21 +1,8 @@
 package com.mrminecreep.jarock.networking.java;
 
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import com.mrminecreep.jarock.Jarock;
-import com.mrminecreep.jarock.Logger;
-import com.mrminecreep.jarock.networking.ClientRegistry;
+import com.mrminecreep.jarock.util.ByteArrayUtils;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -30,7 +17,7 @@ public class PacketSplitter extends ReplayingDecoder<Void>{
 		if(ctx.channel().isActive()) {
 			while(in.isReadable()) {
 				
-				Integer len = InternalTypes.readVarInt(in);
+				Integer len = ByteArrayUtils.readVarInt(in);
 				
 				ByteBuf output = Unpooled.buffer(len);
 				

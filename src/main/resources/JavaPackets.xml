@@ -5,7 +5,11 @@
 <!-- 
 
 	<packet id="See https://wiki.vg/index.php?title=Protocol&oldid=15346" state="See https://wiki.vg/index.php?title=Protocol&oldid=15346" name="See https://wiki.vg/index.php?title=Protocol&oldid=15346" type="Only present if a packet has multiple definitions, if its set then a byte with the specified type is pushed to the first element of the data array">
-		<field type="See https://wiki.vg/index.php?title=Protocol&oldid=15346" optional="if the field is optional then it optional is true. If set a boolean will be pushed BEFORE the actual field indicating if the field is present or not">Field name</field>
+		<field type="See https://wiki.vg/index.php?title=Protocol&oldid=15346" optional="if the field is optional then it optional is true. If set a boolean will be pushed BEFORE the actual field indicating whether the field is present or not">Field name</field>
+		
+		Note:
+		The ARRAYSTART tag is encoded as an integer in the Array. Whenever such a tag is encountered the following fields are parsed n times (n being the encoded integer).
+		
 	</packet>
  -->
  
@@ -126,21 +130,23 @@
 		<!-- Determines the rest of the Player format after the UUID (In this case: 0) -->
 		<field type="VarInt">Action</field>
 		<!-- Number of elements in the following array (Even if it says "Add player" you have to send every player) -->
-		<field type="VarInt">NumberOfPlayers</field>"
-		<field type="UUID">UUID</field>
-		<field type="String">Name</field>
-		<field type="VarInt">NumberOfProperties</field>
-		<field type="String" optional="true">Name</field>
-		<field type="String" optional="true">Value</field>
-		<field type="Boolean" optional="true">IsSigned</field>
-		<!-- Only if Is Signed is true -->
-		<field type="String" optional="true">Signature</field>
-		<field type="VarInt">Gamemode</field>
-		<!-- Measured in milliseconds -->
-		<field type="VarInt">Ping</field>
-		<field type="Boolean">HasDisplayName</field>
-		<!-- Only if Has Display Name is true -->
-		<field type="Chat" optional="yes">DisplayName</field>
+		<field type="VarInt">NumberOfPlayers</field>
+		<ARRAYSTART type="ARRAYSTART">
+			<field type="UUID">UUID</field>
+			<field type="String">Name</field>
+			<field type="VarInt">NumberOfProperties</field>
+			<field type="String" optional="true">Name</field>
+			<field type="String" optional="true">Value</field>
+			<field type="Boolean" optional="true">IsSigned</field>
+			<!-- Only if Is Signed is true -->
+			<field type="String" optional="true">Signature</field>
+			<field type="VarInt">Gamemode</field>
+			<!-- Measured in milliseconds -->
+			<field type="VarInt">Ping</field>
+			<field type="Boolean">HasDisplayName</field>
+			<!-- Only if Has Display Name is true -->
+			<field type="Chat" optional="yes">DisplayName</field>
+		</ARRAYSTART>
 		
 		<!-- The Property field looks as in the response of Mojang API#UUID -> Profile + Skin/Cape,
 		 except of course using the protocol format instead of JSON.

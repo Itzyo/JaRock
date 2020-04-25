@@ -7,6 +7,7 @@ import java.util.Date;
 
 import com.mrminecreep.jarock.event.EventHandler;
 import com.mrminecreep.jarock.event.EventRegistry;
+import com.mrminecreep.jarock.event.events.ChunkDataEvent;
 import com.mrminecreep.jarock.event.events.HandshakeEvent;
 import com.mrminecreep.jarock.event.events.HeldItemChangeEvent;
 import com.mrminecreep.jarock.event.events.JoinGameEvent;
@@ -16,7 +17,6 @@ import com.mrminecreep.jarock.event.events.LoginStartEvent;
 import com.mrminecreep.jarock.event.events.LoginSuccessEvent;
 import com.mrminecreep.jarock.event.events.PlayerInfoAddPlayerEvent;
 import com.mrminecreep.jarock.event.events.PlayerInfoRemovePlayerEvent;
-import com.mrminecreep.jarock.event.events.PlayerInfoUpdateLatencyEvent;
 import com.mrminecreep.jarock.event.events.PlayerPositionAndLookEvent;
 import com.mrminecreep.jarock.event.events.PlayerPositionUpdateEvent;
 import com.mrminecreep.jarock.event.events.PlayerRotationUpdateEvent;
@@ -46,7 +46,7 @@ public class Jarock {
 			logFolder.mkdir();
 		}
 		PrintStream o = new PrintStream(new File(String.format("Log/log-%d", date.getTime())));
-		System.setOut(o);
+		System.setErr(o);
 		
 		EventRegistry.registerEvent(HandshakeEvent.class);
 		EventRegistry.registerEvent(LoginStartEvent.class);
@@ -59,9 +59,9 @@ public class Jarock {
 		EventRegistry.registerEvent(KeepAliveEventSend.class);
 		EventRegistry.registerEvent(PlayerPositionUpdateEvent.class);
 		EventRegistry.registerEvent(PlayerRotationUpdateEvent.class);
-		EventRegistry.registerEvent(PlayerInfoUpdateLatencyEvent.class);
 		EventRegistry.registerEvent(PlayerInfoAddPlayerEvent.class);
 		EventRegistry.registerEvent(PlayerInfoRemovePlayerEvent.class);
+		EventRegistry.registerEvent(ChunkDataEvent.class);
 		EventHandler.registerHandler(new LoginHandler());
 		EventHandler.registerHandler(new GeneralPurposeHandler());
 		EventHandler.registerHandler(new GameHandler());
@@ -94,6 +94,8 @@ public class Jarock {
 		((KeepAliveTicker) GlobalObjectRegistry.get(1)).kill();
 		((KeepAliveTicker) GlobalObjectRegistry.get(1)).join();
 		GlobalObjectRegistry.unregister(1);
+		
+		System.exit(0);
 	}
 	
 }

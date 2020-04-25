@@ -1,7 +1,6 @@
 package com.mrminecreep.jarock.event.events;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import com.mrminecreep.jarock.minecraft.Player;
 
@@ -18,10 +17,7 @@ public class PlayerInfoRemovePlayerEvent implements Event {
 		this.data.add(4);
 		this.data.add(1);
 		
-		String uuid = p.getUUID();
-		uuid = uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32);
-		this.data.add(UUID.fromString(uuid).getMostSignificantBits());
-		this.data.add(UUID.fromString(uuid).getLeastSignificantBits());
+		this.data.add(p.getUUID());
 	}
 
 	@Override

@@ -1,14 +1,9 @@
 package com.mrminecreep.jarock.event.events;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import com.mrminecreep.jarock.minecraft.Player;
 import com.mrminecreep.jarock.minecraft.registry.PlayerRegistry;
-import com.mrminecreep.jarock.networking.java.InternalTypes;
-
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 
 public class PlayerInfoAddPlayerEvent implements Event {
 	
@@ -22,26 +17,23 @@ public class PlayerInfoAddPlayerEvent implements Event {
 		this.data.add(this.getPacketID());
 		this.data.add(0);
 		this.data.add(players.size());
+		this.data.add(players.size());
 		
-		ByteBuf buf = Unpooled.buffer();
-		
-		for(Player p: players) {
+		for(Player p : players) {
+			this.data.add(p.getUUID());
+			this.data.add(p.getUsername());
 			
-			String uuid = p.getUUID();
-			uuid = uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32);
-			buf.writeLong(UUID.fromString(uuid).getMostSignificantBits());
-			buf.writeLong(UUID.fromString(uuid).getLeastSignificantBits());
+			this.data.add(0);
+			this.data.add(false);
+			this.data.add(false);
+			this.data.add(false);
+			this.data.add(false);
 			
-			buf.writeBytes(InternalTypes.writeString(p.getUsername()));
-			buf.writeBytes(InternalTypes.writeVarInt(0));
-			
-			buf.writeBytes(InternalTypes.writeVarInt(p.getGamemode().intValue()));
-			buf.writeBytes(InternalTypes.writeVarInt(2));
-			buf.writeBoolean(false);
+			this.data.add(0);
+			this.data.add(1);
+			this.data.add(false);
+			this.data.add(false);
 		}
-		
-		//buf.retain(players.size());
-		this.data.add(buf);
 	}
 
 	@Override

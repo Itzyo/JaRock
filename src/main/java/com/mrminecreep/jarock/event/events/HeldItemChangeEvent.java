@@ -9,12 +9,10 @@ public class HeldItemChangeEvent implements Event {
 	private Byte Slot;
 	private Player p;
 	private ArrayList<Object> data = new ArrayList<Object>();
-	private Boolean send;
 	
-	public HeldItemChangeEvent(Byte Slot, Player p, Boolean send) {
+	public HeldItemChangeEvent(Byte Slot, Player p) {
 		this.Slot = Slot;
 		this.p = p;
-		this.send = send;
 		
 		this.data.add(this.getPacketID());
 		this.data.add(this.Slot);
@@ -48,7 +46,7 @@ public class HeldItemChangeEvent implements Event {
 
 	@Override
 	public boolean send() {
-		return this.send;
+		return true;
 	}
 
 }

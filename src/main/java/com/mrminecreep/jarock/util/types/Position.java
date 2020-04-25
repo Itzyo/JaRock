@@ -1,4 +1,4 @@
-package com.mrminecreep.jarock.networking.java.Types;
+package com.mrminecreep.jarock.util.types;
 
 public class Position {
 	

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -21,7 +22,7 @@ import com.mrminecreep.jarock.minecraft.registry.PlayerRegistry;
 import com.mrminecreep.jarock.minecraft.world.World;
 import com.mrminecreep.jarock.networking.ClientRegistry;
 import com.mrminecreep.jarock.networking.java.JavaSocket;
-import com.mrminecreep.jarock.networking.java.Types.Position;
+import com.mrminecreep.jarock.util.types.Position;
 
 public class LoginHandler {
 	
@@ -63,7 +64,8 @@ public class LoginHandler {
 		}
 		
 		if(uuid != null) {
-			Player p = new Player(e.getClient(), e.isBedrock(), e.getUsername(), uuid);
+			uuid = uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32);
+			Player p = new Player(e.getClient(), e.isBedrock(), e.getUsername(), UUID.fromString(uuid));
 			PlayerRegistry.registerPlayer(p);
 			Logger.log_debug("Registered player %s", e.getUsername());
 			EventConstructor.createLoginSuccessEvent(p);
@@ -79,7 +81,7 @@ public class LoginHandler {
 		ClientRegistry.changeClientState(e.getPlayer().getClient(), 3);
 		Logger.log_debug("Changed state of %s to 3.", e.getPlayer().getClient());
 		EventConstructor.createJoinGameEvent(EntityRegistry.getEntityID(e.getPlayer()), e.getPlayer().getGamemode(), 0, "flat", 15, false, e.getPlayer());
-		EventConstructor.createHeldItemChangeEvent((byte) 8, e.getPlayer(), true);
+		EventConstructor.createHeldItemChangeEvent((byte) 8, e.getPlayer());
 		World.sendChunksToPlayer(e.getPlayer());
 		EventConstructor.createSpawnPositionEvent(Spawn, e.getPlayer());
 		Thread.currentThread();

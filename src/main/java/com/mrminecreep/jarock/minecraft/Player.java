@@ -1,8 +1,11 @@
 package com.mrminecreep.jarock.minecraft;
 
+import java.util.UUID;
+
 public class Player extends Entity{
 	
-	private String client, Username, uuid;
+	private String client, Username;
+	private UUID uuid;
 	private boolean isBedrock;
 	private boolean LoginDone = false;
 	private Long lastKeepAlive = null;
@@ -10,7 +13,7 @@ public class Player extends Entity{
 	private Long ping = (long) 0;
 	private Byte gamemode = 0;
 	
-	public Player(String client, boolean isBedrock, String Username, String uuid) {
+	public Player(String client, boolean isBedrock, String Username, UUID uuid) {
 		this.client = client;
 		this.Username = Username;
 		this.uuid = uuid;
@@ -69,7 +72,7 @@ public class Player extends Entity{
 		return this.Username;
 	}
 	
-	public String getUUID() {
+	public UUID getUUID() {
 		return this.uuid;
 	}
 	

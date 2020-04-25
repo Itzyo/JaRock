@@ -8,48 +8,45 @@ import com.mrminecreep.jarock.minecraft.registry.EntityRegistry;
 import com.mrminecreep.jarock.minecraft.registry.PlayerRegistry;
 import com.mrminecreep.jarock.networking.ClientRegistry;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
-public class EndpointIn extends ChannelInboundHandlerAdapter{
+public class Decoder extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		if(msg instanceof HashMap) {
-			
-			@SuppressWarnings("unchecked")
-			HashMap<String, Object> p = (HashMap<String, Object>) msg;
-			
-			switch(Integer.decode(p.get("Id").toString())) {
-			case 0:{
-				if(ClientRegistry.getState(ctx.channel().remoteAddress().toString()) == 0) {
-					EventConstructor.createHandshakeEvent(p.get("ProtocolVersion"), p.get("ServerAddress"), p.get("ServerPort"),
-							p.get("NextState"), ctx.channel().remoteAddress().toString());
-				} else if(ClientRegistry.getState(ctx.channel().remoteAddress().toString()) == 2) {
-					EventConstructor.createLoginStartEvent(p.get("Username"), ctx.channel().remoteAddress().toString(), false);
-				}
-				break;
+		
+		
+		HashMap<String, Object> packet = XMLParser.deserialize((ByteBuf) msg, ctx.channel().remoteAddress().toString());
+		
+		switch(Integer.decode(packet.get("id").toString())) {
+		case 0:{
+			if(ClientRegistry.getState(ctx.channel().remoteAddress().toString()) == 0) {
+				EventConstructor.createHandshakeEvent(packet.get("ProtocolVersion"), packet.get("ServerAddress"), packet.get("ServerPort"),
+						packet.get("NextState"), ctx.channel().remoteAddress().toString());
+			} else if(ClientRegistry.getState(ctx.channel().remoteAddress().toString()) == 2) {
+				EventConstructor.createLoginStartEvent(packet.get("Username"), ctx.channel().remoteAddress().toString(), false);
 			}
-			
-			case 15:{
-				EventConstructor.createKeepAliveEventRecv(p.get("KeepAliveID"), PlayerRegistry.getPlayerByClient(ctx.channel().remoteAddress().toString()));
-				break;
-			}
-			
-			case 17:{
-				EventConstructor.createPlayerPositionUpdateEvent(p.get("X"), p.get("Y"), p.get("Z"), p.get("OnGround"),
-						PlayerRegistry.getPlayerByClient(ctx.channel().remoteAddress().toString()));
-				break;
-			}
-			
-			case 19:{
-				EventConstructor.createPlayerRotationUpdateEvent(p.get("Yaw"), p.get("Pitch"), p.get("OnGround"),
-						PlayerRegistry.getPlayerByClient(ctx.channel().remoteAddress().toString()));
-				break;
-			}
-			}
-		} else {
-			Logger.log_error("Got corrupted packet");
+			break;
+		}
+		
+		case 15:{
+			EventConstructor.createKeepAliveEventRecv(packet.get("KeepAliveID"), PlayerRegistry.getPlayerByClient(ctx.channel().remoteAddress().toString()));
+			break;
+		}
+		
+		case 17:{
+			EventConstructor.createPlayerPositionUpdateEvent(packet.get("X"), packet.get("Y"), packet.get("Z"), packet.get("OnGround"),
+					PlayerRegistry.getPlayerByClient(ctx.channel().remoteAddress().toString()));
+			break;
+		}
+		
+		case 19:{
+			EventConstructor.createPlayerRotationUpdateEvent(packet.get("Yaw"), packet.get("Pitch"), packet.get("OnGround"),
+					PlayerRegistry.getPlayerByClient(ctx.channel().remoteAddress().toString()));
+			break;
+		}
 		}
 	}
 	

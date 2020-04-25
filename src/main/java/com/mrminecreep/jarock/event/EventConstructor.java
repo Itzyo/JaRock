@@ -1,6 +1,6 @@
 package com.mrminecreep.jarock.event;
 
-import com.mrminecreep.jarock.Logger;
+import com.mrminecreep.jarock.event.events.ChunkDataEvent;
 import com.mrminecreep.jarock.event.events.Event;
 import com.mrminecreep.jarock.event.events.HandshakeEvent;
 import com.mrminecreep.jarock.event.events.HeldItemChangeEvent;
@@ -11,13 +11,15 @@ import com.mrminecreep.jarock.event.events.LoginStartEvent;
 import com.mrminecreep.jarock.event.events.LoginSuccessEvent;
 import com.mrminecreep.jarock.event.events.PlayerInfoAddPlayerEvent;
 import com.mrminecreep.jarock.event.events.PlayerInfoRemovePlayerEvent;
-import com.mrminecreep.jarock.event.events.PlayerInfoUpdateLatencyEvent;
 import com.mrminecreep.jarock.event.events.PlayerPositionAndLookEvent;
 import com.mrminecreep.jarock.event.events.PlayerPositionUpdateEvent;
 import com.mrminecreep.jarock.event.events.PlayerRotationUpdateEvent;
 import com.mrminecreep.jarock.event.events.SpawnPositionEvent;
 import com.mrminecreep.jarock.minecraft.Player;
-import com.mrminecreep.jarock.networking.java.Types.Position;
+import com.mrminecreep.jarock.util.types.Position;
+
+import io.netty.buffer.ByteBuf;
+import net.querz.nbt.CompoundTag;
 
 /**
  * Constructor class that provides functions for creating events with parameters. <br>
@@ -61,13 +63,13 @@ public class EventConstructor {
 		push(e);
 	}
 	
-	 public static void createJoinGameEvent(Object EntityID, byte Gamemode, Object Dimension, Object LevelType, Object ViewDistance, boolean ReducedDebugInfo, Object Player) {
-		 JoinGameEvent e = new JoinGameEvent((Integer) EntityID, Gamemode, (Integer) Dimension, (String) LevelType, (Integer) ViewDistance, ReducedDebugInfo, (Player) Player);
+	 public static void createJoinGameEvent(Object EntityID, byte Gamemode, Object Dimension, Object LevelType, Object ViewDistance, Object ReducedDebugInfo, Object Player) {
+		 JoinGameEvent e = new JoinGameEvent((Integer) EntityID, Gamemode, (Integer) Dimension, (String) LevelType, (Integer) ViewDistance, (Boolean) ReducedDebugInfo, (Player) Player);
 		 push(e);
 	 }
 	 
-	 public static void createHeldItemChangeEvent(Byte Slot, Player Player, Boolean send) {
-		 HeldItemChangeEvent e = new HeldItemChangeEvent(Slot, Player, send);
+	 public static void createHeldItemChangeEvent(Object Slot, Player Player) {
+		 HeldItemChangeEvent e = new HeldItemChangeEvent((Byte) Slot, Player);
 		 push(e);
 	 }
 	 
@@ -76,8 +78,8 @@ public class EventConstructor {
 		 push(e);
 	 }
 	 
-	 public static void createPlayerPositionAndLookEvent(Object X, Object Y, Object Z, Object Yaw, Object Pitch, byte Flags, Object TeleportID, Player p, Boolean send) {
-		 PlayerPositionAndLookEvent e = new PlayerPositionAndLookEvent((Double) X, (Double) Y, (Double) Z, (Float) Yaw, (Float) Pitch, Flags, (Integer) TeleportID, p, send);
+	 public static void createPlayerPositionAndLookEvent(Object X, Object Y, Object Z, Object Yaw, Object Pitch, Object Flags, Object TeleportID, Player p, Boolean send) {
+		 PlayerPositionAndLookEvent e = new PlayerPositionAndLookEvent((Double) X, (Double) Y, (Double) Z, (Float) Yaw, (Float) Pitch, (Byte) Flags, (Integer) TeleportID, p, send);
 		 push(e);
 	 }
 	 
@@ -101,11 +103,6 @@ public class EventConstructor {
 		 push(e);
 	 }
 	 
-	 public static void createPlayerInfoUpdateLatencyEvent(Player p) {
-		 PlayerInfoUpdateLatencyEvent e = new PlayerInfoUpdateLatencyEvent(p);
-		 push(e);
-	 }
-	 
 	 public static void createPlayerInfoAddPlayerEvent() {
 		 PlayerInfoAddPlayerEvent e = new PlayerInfoAddPlayerEvent();
 		 push(e);
@@ -113,6 +110,11 @@ public class EventConstructor {
 	 
 	 public static void createPlayerInfoRemovePlayerEvent(Player p) {
 		 PlayerInfoRemovePlayerEvent e = new PlayerInfoRemovePlayerEvent(p);
+		 push(e);
+	 }
+	 
+	 public static void createChunkDataEvent(Object chunkX, Object chunkZ, Object FullChunk, Object PrimaryBitmask, Object Heightmaps, Object ChunkData, Player p) {
+		 ChunkDataEvent e = new ChunkDataEvent((Integer) chunkX, (Integer) chunkZ, (Boolean) FullChunk, (Integer) PrimaryBitmask, (CompoundTag) Heightmaps, (ByteBuf) ChunkData, p);
 		 push(e);
 	 }
 	

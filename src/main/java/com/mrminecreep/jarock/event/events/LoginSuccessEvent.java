@@ -13,8 +13,7 @@ public class LoginSuccessEvent implements Event{
 		this.p = p;
 		
 		this.data.add(this.getPacketID());
-		String uuid = this.p.getUUID();
-		uuid = uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32);
+		String uuid = this.p.getUUID().toString();
 		this.data.add(uuid);
 		this.data.add(this.p.getUsername());
 	}

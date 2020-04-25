@@ -20,7 +20,6 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 
 public class JavaSocket {
 	
-	static final EventExecutorGroup group = new DefaultEventExecutorGroup(16);
     public static final ChannelGroup all = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 	
     private int port;
@@ -42,10 +41,8 @@ public class JavaSocket {
      				ClientRegistry.registerClient(ch.remoteAddress().toString(), ch);
      				Logger.log_info("Got connection to %s.", ch.remoteAddress().toString());
      				ch.pipeline().addLast(new PacketSplitter());
-                    ch.pipeline().addLast(new PipelineDecoder());
+                    ch.pipeline().addLast(new Decoder());
                     ch.pipeline().addLast(new Encoder());
-                    ch.pipeline().addLast(new PacketSerializer());
-                    ch.pipeline().addLast(group, "InboundHandlerFinal", new EndpointIn());
                  }
              })
              .option(ChannelOption.SO_BACKLOG, 128);

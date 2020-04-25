@@ -1,12 +1,9 @@
 package com.mrminecreep.jarock.minecraft.world;
 
-import java.util.ArrayList;
-
 import com.mrminecreep.jarock.Logger;
+import com.mrminecreep.jarock.event.EventConstructor;
 import com.mrminecreep.jarock.minecraft.Player;
-import com.mrminecreep.jarock.networking.ClientRegistry;
-import com.mrminecreep.jarock.networking.java.InternalTypes;
-import com.mrminecreep.jarock.networking.java.Types.Position;
+import com.mrminecreep.jarock.util.ByteArrayUtils;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -22,8 +19,7 @@ public class World {
 		
 		for(int i = chunkX - 3; i <= chunkX + 3; i++) {
 			for(int x = chunkZ - 3; x <= chunkZ + 3; x++) {
-				ArrayList<Object> out = World.getPacketAtCoords(i, x);
-				ClientRegistry.getChannel(p.getClient()).writeAndFlush(out);
+				EventConstructor.createChunkDataEvent(i, x, true, 128, World.genHeightmaps(), World.genChunkData(i, x), null);
 			}
 		}
 	}
@@ -47,44 +43,12 @@ public class World {
 		224 - 239: 15
 		240 - 255: 16
 	 */
-	public static ArrayList<Object> getPacketAtCoords(int x, int z) {
-		ArrayList<Object> out = new ArrayList<Object>();
-		
-		out.add(33);
-		out.add(x);
-		out.add(z);
-		out.add(true);
-		out.add(128);
-		
-		CompoundTag nbt = new CompoundTag();
-		long[] heightmap = new long[36];
-		int c = 0;
-		int mask = (int)((1 << 9) - 1);
-		
-		for(int i = 0; i < 16; i++) {
-			for(int q = 0; q < 16; q++) {
-				int startLong = (c * 9) / 64;
-	            int startOffset = (c * 9) % 64;
-	            int endLong = ((c + 1) * 9 - 1) / 64;
-	            
-	            long v = 100;
-	            
-	            v &= mask;
-	            heightmap[startLong] |= (v << startOffset);
-	
-	            if (startLong != endLong) {
-	                heightmap[endLong] = (v >> (64 - startOffset));
-	            }
-	            c++;
-			}
-		}
-		nbt.put("MOTION_BLOCKING", new LongArrayTag(heightmap));
-		out.add(nbt);
+	private static ByteBuf genChunkData(int x, int z) {
 		
 		ByteBuf buf = Unpooled.buffer();
-		buf.writeShort(256);
-		buf.writeByte(14);
-		buf.writeBytes(InternalTypes.writeVarInt(16 * 16 * 16 * 14 / 64));
+		ByteArrayUtils.writeShort(buf, (short) 256);
+		ByteArrayUtils.writeByte(buf, (byte) 14);
+		ByteArrayUtils.writeVarInt(buf, 16 * 16 * 16 * 14 / 64);
 		
 		long[] data = new long[16 * 16 * 16 * 14 / 64];
 		
@@ -113,20 +77,44 @@ public class World {
 		}
 		
 		for(long l : data) {
-			buf.writeLong(l);
+			ByteArrayUtils.writeLong(buf, l);
 		}
 		
 		for(int zt = 0; zt < 16; zt++) {
 			for(int xs = 0; xs < 16; xs++) {
-				buf.writeInt(127);
+				ByteArrayUtils.writeInteger(buf, 127);
 			}
 		}
 		
-		out.add(buf.readableBytes());
-		out.add(buf);
-		out.add(0);
+		return buf;
+	}
+	
+	private static CompoundTag genHeightmaps() {
+		CompoundTag nbt = new CompoundTag();
+		long[] heightmap = new long[36];
+		int c = 0;
+		int mask = (int)((1 << 9) - 1);
 		
-		return out;
+		for(int i = 0; i < 16; i++) {
+			for(int q = 0; q < 16; q++) {
+				int startLong = (c * 9) / 64;
+	            int startOffset = (c * 9) % 64;
+	            int endLong = ((c + 1) * 9 - 1) / 64;
+	            
+	            long v = 100;
+	            
+	            v &= mask;
+	            heightmap[startLong] |= (v << startOffset);
+	
+	            if (startLong != endLong) {
+	                heightmap[endLong] = (v >> (64 - startOffset));
+	            }
+	            c++;
+			}
+		}
+		nbt.put("MOTION_BLOCKING", new LongArrayTag(heightmap));
+		
+		return nbt;
 	}
 
 }
